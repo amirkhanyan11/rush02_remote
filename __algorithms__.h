@@ -6,63 +6,69 @@
 /*   By: aamirkha <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 16:14:38 by aamirkha          #+#    #+#             */
-/*   Updated: 2023/12/02 18:24:36 by aamirkha         ###   ########.fr       */
+/*   Updated: 2023/12/03 00:21:35 by aamirkha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-static int is_alpha(char c)
-{
-	return (c >= 'a' && c <= 'z');
-}
+#include "__helper_functions__.h"
+#include "__string_manip__.h"
 
-static int	is_empty(char *str)
+static void	execute_printing(char *str, char *free_me)
 {
-	return (*str == '\0');
-}
-
-static int	my_strlen(char *str)
-{
-	int	length;
-
-	length = 0;
-	while (*str)
+	while (is_alpha(*str))
 	{
-		length++;
+		write(1, str, 1);
 		str++;
 	}
-	return (length);
+	write(1, " ", 1);
+	free(free_me);
 }
 
-char	*ft_strstr(char *str, char *to_find)
+//     Get_it
+static void	get_it_exp(char *buffer, int dg, int *exp)
 {
-	int	i;
-	int	j;
-	int	k;
+	char	*ptr;
+	char	*_needle;
 
-	if (is_empty(to_find))
+	dg = 0;
+	if (*exp == 0)
 	{
-		return (str);
-	}
-	i = 0;
-	while (str[i])
+		return ;	
+	}/*
+	ptr = stringify_digit(dg);
+	_needle = ft_strstr(buffer, ptr);
+	execute_printing(_needle, ptr);*/
+	ptr = stringify_power(*exp);
+	_needle = ft_strstr(buffer, ptr);
+	execute_printing(_needle, ptr);
+	(*exp)--; // maybe
+}
+
+static void	get_it_uniq(char *buffer, int dg, int *exp, int i)
+{
+	char	*ptr;
+	char	*t_ptr;
+
+	ptr = (char *) malloc (*exp + 2);
+	ptr[0] = (dg + '0');
+	t_ptr = ptr + 1;
+	ptr[*exp + 1] = '\0';
+	while (i-- > 0)
+		*t_ptr = '0';
+	t_ptr = ft_strstr(buffer, ptr);
+	execute_printing(t_ptr, ptr);
+	get_it_exp(buffer, 1, exp);
+}
+
+static void	chulan(char *buffer, int dg, int exp)
+{
+	while(exp > 1)
 	{
-		j = 0;
-		k = i;
-		while (str[i] == to_find[j])
+		if ((exp - 1) % 3 == 0)
 		{
-			i++;
-			j++;
-			if (j == my_strlen(to_find))
-			{
-				i -= j;
-				while (!is_alpha(str[i]))
-				{
-					i++;
-				}
-				return (str + i);
-			}
+			exp--;
+			get_it_uniq(buffer, dg, &exp, exp);
 		}
-		i = k + 1;
+		exp--;
 	}
-	return (NULL);
 }
