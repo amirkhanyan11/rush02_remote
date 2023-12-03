@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   error.handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tyavroya <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/02 16:41:31 by tyavroya          #+#    #+#             */
-/*   Updated: 2023/12/03 20:08:59 by tyavroya         ###   ########.fr       */
+/*   Created: 2023/12/03 20:04:23 by tyavroya          #+#    #+#             */
+/*   Updated: 2023/12/03 20:09:16 by tyavroya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include "functions.h"
-#include "print_num.h"
-#include "error_handler.h"
-
-int	main(int argc, char **argv)
+int	error_handler(int argc, char **argv)
 {
-	int fd;
-	char	buffer[700];
+	int	count;
 
-	if (!(error_handler(argc, argv)))
+	if (argc == 1 || argc > 3)
+	{
+		write(1, "Error", 5);
 		return (0);
-	fd = open(argv[2], O_RDONLY);
-	read(fd, buffer, 700);
-	print_num(buffer, argv[1], my_strlen_argv(argv[1]));
-	return (0);
+	}
+	count = 0;
+	while (argv[1][count] != '\0')
+	{
+		if (argv[1][count] < '0' || argv[1][count] > '9')
+			return (0);
+		++count;
+	}
+	return (1);
 }
